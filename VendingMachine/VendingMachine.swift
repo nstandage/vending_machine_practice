@@ -7,11 +7,12 @@
 //
 
 import Foundation
+import UIKit
 
 // Mark: - Protocols for Vending Machine
 
 ///List of available items
-enum VendingSelection {
+enum VendingSelection: String {
     case soda
     case dietSoda
     case chips
@@ -24,6 +25,14 @@ enum VendingSelection {
     case fruitJuice
     case sportsDrink
     case gum
+    
+    func icon() -> UIImage {
+        guard let image = UIImage(named: self.rawValue) else {
+            return #imageLiteral(resourceName: "default")
+            //     ^ return image literal
+        }
+        return image
+    }
 }
 
 
@@ -51,6 +60,12 @@ struct Item: VendingItem {
 }
 
 
+enum VendingMachineError: Error {
+    case invalidSelection
+    case outOfStock
+    case insufficientFunds(required: Double)
+    
+}
 class FoodVendingMachine: VendingMachine {
     
     let selection: [VendingSelection] = [.soda, .dietSoda, .chips, .cookie, .sandwich, .wrap, .candyBar, .popTart, .water, .fruitJuice, .sportsDrink, .gum]
@@ -64,6 +79,28 @@ class FoodVendingMachine: VendingMachine {
     }
     
     func vend(selection: VendingSelection, quantity: Int) throws {
+        guard var item = inventory[selection] else {
+            throw VendingMachineError.invalidSelection
+        }
+        
+        guard item.quantity < quantity else {
+            throw VendingMachineError.outOfStock
+        }
+        
+        let totalPrice = item.price * Double(quantity)
+        
+        if totalPrice <= amountDeposited {
+            
+            amountDeposited -= totalPrice
+            
+            item.quantity -= quantity
+            
+            inventory.updateValue(item, forKey: selection)
+        } else {
+            throw VendingMachineError.insufficientFunds(required: totalPrice - amountDeposited)
+            
+        }
+        
     }
     
     func deposit(_ amount: Double) {
@@ -74,6 +111,7 @@ class FoodVendingMachine: VendingMachine {
 enum InventoryError: Error {
     case invalidResource
     case conversionFailure
+    case invalidSelection
 }
 
 class PlistConverter {
@@ -91,7 +129,7 @@ class PlistConverter {
 }
 
 class InventoryUnarchiver {
-    static func vendingInventory(fromDictionary dictionary: [String: AnyObject]) ->  [VendingSelection:VendingItem] {
+    static func vendingInventory(fromDictionary dictionary: [String: AnyObject]) throws ->  [VendingSelection:VendingItem] {
     var inventory: [VendingSelection:VendingItem] = [:]
     
     for (key, value) in dictionary {
@@ -99,6 +137,12 @@ class InventoryUnarchiver {
     if let itemDictionary = value as? [String:Any], let price = itemDictionary["price"] as? Double, let quantity = itemDictionary["quantity"] as? Int {
     
         let item = Item(price: price, quantity: quantity)
+        
+        guard let selection = VendingSelection(rawValue: key) else {
+            throw InventoryError.invalidSelection
+        }
+        
+        inventory.updateValue(item, forKey: selection)
     }
     
     
