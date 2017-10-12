@@ -45,6 +45,7 @@ protocol VendingMachine {
     func vend(selection: VendingSelection,   quantity: Int) throws
     
     func deposit(_ amount: Double)
+    func item(forSelection selection: VendingSelection) -> VendingItem?
 }
 
 
@@ -83,13 +84,13 @@ class FoodVendingMachine: VendingMachine {
             throw VendingMachineError.invalidSelection
         }
         
-        guard item.quantity < quantity else {
+        guard item.quantity >= quantity else {
             throw VendingMachineError.outOfStock
         }
         
         let totalPrice = item.price * Double(quantity)
         
-        if totalPrice <= amountDeposited {
+        if amountDeposited >= totalPrice {
             
             amountDeposited -= totalPrice
             
@@ -105,6 +106,10 @@ class FoodVendingMachine: VendingMachine {
     
     func deposit(_ amount: Double) {
         amountDeposited += amount
+    }
+    
+    func item(forSelection selection: VendingSelection) -> VendingItem? {
+        return inventory[selection]
     }
 }
 
