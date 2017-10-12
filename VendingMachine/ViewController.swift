@@ -87,21 +87,24 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
             do{
                 try vendingMachine.vend(selection: currentSelection, quantity: Int(quantityStepper.value))
                 updateDisplayWith(balance: vendingMachine.amountDeposited, totalPrice: 0.0, itemPrice: 0.0, itemQuantity: 1)
-            } catch VendingMachineError.outOfStock {
-                showAlert()
+            }catch VendingMachineError.outOfStock {
+                showAlertWith(title: "Out of Stock", message: "This item is out of stock.")
+            } catch VendingMachineError.insufficientFunds(let required) {
+                showAlertWith(title: "Insufficient Funds", message: "$\(required) is need to complete purchase")
             } catch {
-                
+                fatalError("Fatal Error")
             }
-            
-            
             if let indexPath = collectionView.indexPathsForSelectedItems?.first {
                 collectionView.deselectItem(at: indexPath, animated: true)
                 updateCell(having: indexPath, selected: false)
             }
             
         } else {
-            // FIXME: Alert user to no selection
+            showAlertWith(title: "Invalid Selection", message: "Please make a valid selection.")
         }
+        
+        currentSelection = nil
+        quantityStepper.value = 1
         
     }
     
@@ -134,20 +137,48 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
     }
     
     @IBAction func updateQuantity(_ sender: UIStepper) {
-            let quantity = quantityStepper.value
-        
-        updateDisplayWith(itemQuantity: Int(quantity))
         
         if let currentSelection = currentSelection, let item = vendingMachine.item(forSelection: currentSelection) {
+            let quantity = quantityStepper.value
+            updateDisplayWith(itemQuantity: Int(quantity))
             updateTotalPrice(for: item)
         }
     }
     
-    func showAlert () {
-    let alerController = UIAlertController(title: "Out of Stock", message: "This item is unavailable. Please make another selection.", preferredStyle: .alert)
+    func showAlertWith(title: String, message: String, preferredStyle: UIAlertControllerStyle = .alert ) {
+
+        let alertController = UIAlertController(title: title, message: message, preferredStyle: preferredStyle)
         
-        present(alerController, animated: true, completion: nil)
+        let alertAction = UIAlertAction(title: "Ok", style: .default, handler: dismissAlert)
+        
+        alertController.addAction(alertAction)
+        
+        present(alertController, animated: true, completion: nil)
     }
+    
+    func dismissAlert(sender: UIAlertAction) {
+        updateDisplayWith(totalPrice: 0, itemPrice: 0, itemQuantity: 1)
+        
+    }
+    
+    
+    @IBAction func fundsAddedButton() {
+        vendingMachine.deposit(5.0)
+
+        
+        
+        if let indexPath = collectionView.indexPathsForSelectedItems?.first {
+            collectionView.deselectItem(at: indexPath, animated: true)
+            updateCell(having: indexPath, selected: false)
+        }
+        
+        
+        currentSelection = nil
+        quantityStepper.value = 1
+        
+        updateDisplayWith(balance: vendingMachine.amountDeposited, totalPrice: 0, itemPrice: 0, itemQuantity: 1)
+    }
+    
     
     // MARK: UICollectionViewDataSource
     

@@ -88,6 +88,10 @@
                                                 <rect key="frame" x="8" y="17.5" width="74" height="30"/>
                                                 <color key="tintColor" red="0.0078431372550000003" green="0.75294117650000003" blue="0.3803921569" alpha="1" colorSpace="calibratedRGB"/>
                                                 <state key="normal" title="Add Funds"/>
+                                                <connections>
+                                                    <action selector="fundsAddedButton" destination="BYZ-38-t0r" eventType="touchUpInside" id="euU-8v-LRa"/>
+                                                    <segue destination="wK3-pv-ohh" kind="presentation" id="TeM-0d-LD9"/>
+                                                </connections>
                                             </button>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="$80.00" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="vwe-cn-0a2">
                                                 <rect key="frame" x="297" y="20.5" width="70" height="24"/>
@@ -227,6 +231,53 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="-407.19999999999999" y="136.28185907046478"/>
+        </scene>
+        <!--Funds Added View Controller-->
+        <scene sceneID="vVY-Dn-MrL">
+            <objects>
+                <viewController id="wK3-pv-ohh" customClass="FundsAddedViewController" customModule="VendingMachine" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="GQo-R1-1gj"/>
+                        <viewControllerLayoutGuide type="bottom" id="kaO-3h-VWy"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="2Wv-Wk-0ku">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="d2C-tU-cc2">
+                                <rect key="frame" x="0.0" y="611" width="375" height="56"/>
+                                <color key="backgroundColor" red="0.92712960025380708" green="0.39905182938358846" blue="0.40912246793933166" alpha="0.90472495719178081" colorSpace="custom" customColorSpace="displayP3"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="56" id="WQU-V9-5zD"/>
+                                    <constraint firstAttribute="height" constant="56" id="xgT-44-BwK"/>
+                                </constraints>
+                                <color key="tintColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <state key="normal" title="Dismiss"/>
+                                <connections>
+                                    <action selector="fundsAddedButton" destination="wK3-pv-ohh" eventType="touchUpInside" id="Lz6-dJ-x68"/>
+                                    <action selector="purchase" destination="BYZ-38-t0r" eventType="touchUpInside" id="iMh-WQ-2n8"/>
+                                </connections>
+                            </button>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Funds Added!" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="A5D-B4-Utn">
+                                <rect key="frame" x="134" y="323" width="107" height="21"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                        </subviews>
+                        <color key="backgroundColor" red="0.16769960519999999" green="0.1956448257" blue="0.22480580210000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <constraints>
+                            <constraint firstItem="A5D-B4-Utn" firstAttribute="centerY" secondItem="2Wv-Wk-0ku" secondAttribute="centerY" id="0Fc-3s-AFv"/>
+                            <constraint firstItem="kaO-3h-VWy" firstAttribute="top" secondItem="d2C-tU-cc2" secondAttribute="bottom" id="8uv-cP-SzQ"/>
+                            <constraint firstItem="A5D-B4-Utn" firstAttribute="centerX" secondItem="2Wv-Wk-0ku" secondAttribute="centerX" id="eb5-mi-0B4"/>
+                            <constraint firstAttribute="trailing" secondItem="d2C-tU-cc2" secondAttribute="trailing" id="o6c-DU-dS0"/>
+                            <constraint firstItem="d2C-tU-cc2" firstAttribute="leading" secondItem="2Wv-Wk-0ku" secondAttribute="leading" id="rmf-sh-xXJ"/>
+                        </constraints>
+                    </view>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="41S-3m-luC" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="370" y="136"/>
         </scene>
     </scenes>
     <resources>

@@ -83,6 +83,7 @@ class FoodVendingMachine: VendingMachine {
         guard var item = inventory[selection] else {
             throw VendingMachineError.invalidSelection
         }
+
         
         guard item.quantity >= quantity else {
             throw VendingMachineError.outOfStock
@@ -97,6 +98,7 @@ class FoodVendingMachine: VendingMachine {
             item.quantity -= quantity
             
             inventory.updateValue(item, forKey: selection)
+
         } else {
             throw VendingMachineError.insufficientFunds(required: totalPrice - amountDeposited)
             
